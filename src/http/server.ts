@@ -1,40 +1,33 @@
-import { Elysia, t } from 'elysia'
-import { db } from '../db/connection'
-import { restaurants, users } from '../db/schema'
+import { Elysia } from 'elysia'
 
-const app = new Elysia().post(
-  '/restaurants',
-  async ({ body, set }) => {
-    const { restaurantName, managerName, email, phone } = body
+import { registerRestaurant } from './routes/register-restaurant'
+import { sendAuthLink } from './routes/send-auth-link'
+import { authenticateFromLink } from './routes/authenticate-from-link'
+import { signOut } from './routes/sign-out'
+import { getProfile } from './routes/get-profile'
+import { getManagedRestaurant } from './routes/get-managed-restaurant'
 
-    const [manager] = await db
-      .insert(users)
-      .values({
-        name: managerName,
-        email,
-        phone,
-        role: 'manager',
-      })
-      .returning({
-        id: users.id,
-      })
+const app = new Elysia()
+  .use(registerRestaurant)
+  .use(sendAuthLink)
+  .use(authenticateFromLink)
+  .use(signOut)
+  .use(getProfile)
+  .use(getManagedRestaurant)
+  .onError(({ code, error, set }) => {
+    switch (code) {
+      case 'VALIDATION': {
+        set.status = error.status
 
-    await db.insert(restaurants).values({
-      name: restaurantName,
-      managerId: manager.id,
-    })
+        return error.toResponse()
+      }
+      default: {
+        console.error(error)
 
-    set.status = 204
-  },
-  {
-    body: t.Object({
-      restaurantName: t.String(),
-      managerName: t.String(),
-      phone: t.String(),
-      email: t.String({ format: 'email' }),
-    }),
-  },
-)
+        return new Response(null, { status: 500 })
+      }
+    }
+  })
 
 app.listen(3333, () => {
   console.log('🔥 HTTP server running!')

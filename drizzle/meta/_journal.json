@@ -8,6 +8,13 @@
       "when": 1710189442795,
       "tag": "0000_eminent_sasquatch",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1710279769798,
+      "tag": "0001_goofy_wraith",
+      "breakpoints": true
     }
   ]
 }

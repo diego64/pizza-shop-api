@@ -15,6 +15,20 @@
       "when": 1710279769798,
       "tag": "0001_goofy_wraith",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1710436256432,
+      "tag": "0002_red_miek",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1710436822835,
+      "tag": "0003_wise_ozymandias",
+      "breakpoints": true
     }
   ]
 }
